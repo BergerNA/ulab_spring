@@ -1,23 +1,24 @@
 package com.edu.ulab.app.storage.dao.proxy;
 
 import com.edu.ulab.app.entity.BaseEntity;
-import com.edu.ulab.app.exception.NullPointerException;
 import com.edu.ulab.app.storage.dao.DaoEntity;
-import com.edu.ulab.app.storage.identity.IdentityProvider;
 import com.edu.ulab.app.utils.CommonUtils;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 
-public class DaoEntityPrePersistIdentityProxy<T extends BaseEntity<ID>, ID> implements DaoEntity<T, ID> {
+public class DaoEntityPrePersistIdentityEntityProxy<T extends BaseEntity<ID>, ID> implements DaoEntity<T, ID> {
 
-    private final IdentityProvider<ID> identityProvider;
     private final DaoEntity<T, ID> entityDao;
 
-    public DaoEntityPrePersistIdentityProxy(IdentityProvider<ID> identityProvider, DaoEntity<T, ID> daoEntity) {
-        this.identityProvider = identityProvider;
+    private final Consumer<BaseEntity<ID>> entityIdentity;
+
+    public DaoEntityPrePersistIdentityEntityProxy(DaoEntity<T, ID> daoEntity,
+                                                  Consumer<BaseEntity<ID>> entityIdentity) {
         this.entityDao = daoEntity;
+        this.entityIdentity = entityIdentity;
     }
 
     @Override
@@ -28,7 +29,7 @@ public class DaoEntityPrePersistIdentityProxy<T extends BaseEntity<ID>, ID> impl
     @Override
     public <S extends T> S save(S entity) {
         CommonUtils.requireNonNull(entity, "Entity to save is null");
-        entity.setId(identityProvider.getIdentity());
+        entityIdentity.accept(entity);
         return entityDao.save(entity);
     }
 

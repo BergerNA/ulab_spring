@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 
-public interface DaoEntity<T extends BaseEntity<?>, ID> {
-    public Optional<T> findById(ID id);
+public interface DaoEntity<T extends BaseEntity<ID>, ID> {
+    Optional<T> findById(ID id);
 
     <S extends T> S save(S entity);
 

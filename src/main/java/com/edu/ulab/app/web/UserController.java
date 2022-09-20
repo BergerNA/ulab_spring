@@ -4,6 +4,7 @@ import com.edu.ulab.app.facade.UserDataFacade;
 import com.edu.ulab.app.web.constant.WebConstant;
 import com.edu.ulab.app.web.request.create.UserBookRequest;
 import com.edu.ulab.app.web.request.update.UserBookUpdateRequest;
+import com.edu.ulab.app.web.response.BaseWebResponse;
 import com.edu.ulab.app.web.response.UserBookResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -35,7 +36,9 @@ public class UserController {
                     @ApiResponse(description = "Created user with his books",
                             content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                                     schema = @Schema(implementation = UserBookResponse.class))),
-                    @ApiResponse(responseCode = "400", description = "The request is malformed")
+                    @ApiResponse(responseCode = "400", description = "The request is malformed",
+                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    schema = @Schema(implementation = BaseWebResponse.class)))
             })
     public UserBookResponse createUserWithBooks(@RequestBody UserBookRequest request,
                                                 @RequestHeader(RQID) @Pattern(regexp = REQUEST_ID_PATTERN) final String requestId) {
@@ -50,8 +53,12 @@ public class UserController {
                     @ApiResponse(responseCode = "200", description = "Updated user with his books",
                             content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                                     schema = @Schema(implementation = UserBookResponse.class))),
-                    @ApiResponse(responseCode = "400", description = "The request is malformed"),
-                    @ApiResponse(responseCode = "404", description = "The resource you try reach is not found")
+                    @ApiResponse(responseCode = "400", description = "The request is malformed",
+                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    schema = @Schema(implementation = BaseWebResponse.class))),
+                    @ApiResponse(responseCode = "404", description = "The resource you try reach is not found",
+                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    schema = @Schema(implementation = BaseWebResponse.class)))
             })
     public UserBookResponse updateUserWithBooks(@RequestBody UserBookUpdateRequest request) {
         log.info("Request with updated user and his books: {}", request);
@@ -66,8 +73,12 @@ public class UserController {
                     @ApiResponse(responseCode = "200", description = "User with his books by user index",
                             content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                                     schema = @Schema(implementation = UserBookResponse.class))),
-                    @ApiResponse(responseCode = "400", description = "The request is malformed"),
-                    @ApiResponse(responseCode = "404", description = "The resource you try reach is not found")
+                    @ApiResponse(responseCode = "400", description = "The request is malformed",
+                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    schema = @Schema(implementation = BaseWebResponse.class))),
+                    @ApiResponse(responseCode = "404", description = "The resource you try reach is not found",
+                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    schema = @Schema(implementation = BaseWebResponse.class)))
             })
     public UserBookResponse getUserWithBooks(@PathVariable Long userId) {
         UserBookResponse response = userDataFacade.getUserWithBooks(userId);
@@ -78,7 +89,9 @@ public class UserController {
     @DeleteMapping(value = "/{userId}")
     @Operation(summary = "Delete user and his book by user index.",
             responses = {
-                    @ApiResponse(responseCode = "400", description = "The request is malformed")
+                    @ApiResponse(responseCode = "400", description = "The request is malformed",
+                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    schema = @Schema(implementation = BaseWebResponse.class)))
             })
     public void deleteUserWithBooks(@PathVariable Long userId) {
         log.info("Delete user and his books:  userId {}", userId);

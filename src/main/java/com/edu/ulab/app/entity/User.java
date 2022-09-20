@@ -2,8 +2,6 @@ package com.edu.ulab.app.entity;
 
 import lombok.Data;
 
-import java.util.List;
-
 @Data
 public class User implements BaseEntity<Long> {
     private Long id;
