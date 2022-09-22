@@ -8,7 +8,7 @@ public interface CrudRepository<T, ID> extends Repository<T, ID> {
 
     Optional<T> findById(ID id);
 
-    void deleteById(ID id);
+    void remove(T entity);
 
     <S extends T> S update(S entity);
 }

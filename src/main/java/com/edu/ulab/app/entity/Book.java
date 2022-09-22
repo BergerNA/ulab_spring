@@ -1,9 +1,13 @@
 package com.edu.ulab.app.entity;
 
-import lombok.Data;
+import lombok.*;
 
-@Data
-public class Book implements BaseEntity<Long>{
+@NoArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PACKAGE)
+@Getter
+@Setter
+@ToString
+public class Book extends BaseEntity<Long>{
     private Long id;
     private Long userId;
     private String title;

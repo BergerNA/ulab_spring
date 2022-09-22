@@ -61,7 +61,6 @@ public class UserController {
                                     schema = @Schema(implementation = BaseWebResponse.class)))
             })
     public UserBookResponse updateUserWithBooks(@RequestBody UserBookUpdateRequest request) {
-        log.info("Request with updated user and his books: {}", request);
         UserBookResponse response = userDataFacade.updateUserWithBooks(request);
         log.info("Response with updated user and his books: {}", response);
         return response;
@@ -94,7 +93,6 @@ public class UserController {
                                     schema = @Schema(implementation = BaseWebResponse.class)))
             })
     public void deleteUserWithBooks(@PathVariable Long userId) {
-        log.info("Delete user and his books:  userId {}", userId);
         userDataFacade.deleteUserWithBooks(userId);
     }
 }

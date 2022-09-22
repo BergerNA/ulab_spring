@@ -47,7 +47,6 @@ public class UserDataFacade {
         log.info("Mapped user request: {}", userDto);
 
         UserDto createdUser = userService.createUser(userDto);
-        log.info("Created user: {}", createdUser);
         List<Long> bookIdList = Optional.ofNullable(userBookRequest.getBookRequests())
                 .orElseGet(Collections::emptyList)
                 .stream()
@@ -56,7 +55,6 @@ public class UserDataFacade {
                 .peek(bookDto -> bookDto.setUserId(createdUser.getId()))
                 .peek(mappedBookDto -> log.info("mapped book: {}", mappedBookDto))
                 .map(bookService::createBook)
-                .peek(createdBook -> log.info("Created book: {}", createdBook))
                 .map(BookDto::getId)
                 .toList();
 
@@ -75,6 +73,7 @@ public class UserDataFacade {
         if (userBookUpdateRequest.getUserUpdateRequest().getId() == null) {
             throw new BadRequestException("Update request hasn't user identity.");
         }
+        log.info("Update user book create request: {}", userBookUpdateRequest);
 
         List<Long> updatedBooks = Optional.ofNullable(userBookUpdateRequest.getBookUpdateRequests())
                 .orElseGet(Collections::emptyList)
@@ -84,13 +83,11 @@ public class UserDataFacade {
                 .map(bookMapper::bookUpdateRequestToBookDto)
                 .peek(mappedBookDto -> log.info("mapped book: {}", mappedBookDto))
                 .map(bookService::updateBook)
-                .peek(updatedBook -> log.info("Update book: {}", updatedBook))
                 .map(BookDto::getId)
                 .toList();
 
         UserDto userDto = userService.updateUser(
                 userMapper.userUpdateRequestToUserDto(userBookUpdateRequest.getUserUpdateRequest()));
-        log.info("Updated user: {}", userDto);
 
         return UserBookResponse.builder()
                 .userId(userDto.getId())
@@ -100,9 +97,10 @@ public class UserDataFacade {
 
     public UserBookResponse getUserWithBooks(Long userId) {
         CommonUtils.requireNonNull(userId, "UserId is null.");
+        log.info("Got user and his books by user id: {}", userId);
         UserDto userDto = userService.getUserById(userId);
-        log.info("User by id {}: {}", userId, userDto);
-        List<Long> userBooksDto = bookService.getBooksByUserId(userId).stream()
+        List<Long> userBooksDto = bookService.getUserBook(userDto)
+                .stream()
                 .map(BookDto::getId)
                 .toList();
         log.info("User books: {}", userBooksDto);
@@ -114,8 +112,10 @@ public class UserDataFacade {
     }
 
     public void deleteUserWithBooks(Long userId) {
-        CommonUtils.requireNonNull(userId, "UserId is null.");
-        bookService.deleteBooksByUserId(userId);
+        CommonUtils.requireNonNull(userId, "Request to delete user with his books doesn't contain the user id");
+        log.info("Delete user and his books by user id {}.", userId);
+        UserDto deletedUser = userService.getUserById(userId);
+        bookService.deleteUserBook(deletedUser);
         userService.deleteUserById(userId);
     }
 }

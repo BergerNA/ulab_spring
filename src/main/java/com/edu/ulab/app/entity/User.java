@@ -1,9 +1,13 @@
 package com.edu.ulab.app.entity;
 
-import lombok.Data;
+import lombok.*;
 
-@Data
-public class User implements BaseEntity<Long> {
+@NoArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PACKAGE)
+@Getter
+@Setter
+@ToString
+public class User extends BaseEntity<Long> {
     private Long id;
     private int age;
     private String title;
@@ -19,3 +23,4 @@ public class User implements BaseEntity<Long> {
         this.id = id;
     }
 }
+

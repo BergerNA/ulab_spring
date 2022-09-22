@@ -26,8 +26,8 @@ public class CrudRepositoryBaseEntity<T extends BaseEntity<ID>, ID> implements C
     }
 
     @Override
-    public void deleteById(ID id) {
-        daoEntity.delete(id);
+    public void remove(T entity) {
+        daoEntity.delete(entity.getId());
     }
 
     @Override
