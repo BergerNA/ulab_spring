@@ -1,8 +1,11 @@
 package com.edu.ulab.app.entity;
 
+import javax.persistence.MappedSuperclass;
+import java.io.Serializable;
 import java.util.Objects;
 
-public abstract class BaseEntity<T> {
+@MappedSuperclass
+public abstract class BaseEntity<T extends Serializable> {
 
     public abstract T getId();
 

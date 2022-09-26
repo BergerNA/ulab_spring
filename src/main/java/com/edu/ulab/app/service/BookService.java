@@ -1,10 +1,6 @@
 package com.edu.ulab.app.service;
 
-
 import com.edu.ulab.app.dto.BookDto;
-import com.edu.ulab.app.dto.UserDto;
-
-import java.util.List;
 
 public interface BookService {
     BookDto createBook(BookDto userDto);
@@ -14,8 +10,4 @@ public interface BookService {
     BookDto getBookById(Long id);
 
     void deleteBookById(Long id);
-
-    List<BookDto> getUserBook(UserDto user);
-
-    void deleteUserBook(UserDto user);
 }

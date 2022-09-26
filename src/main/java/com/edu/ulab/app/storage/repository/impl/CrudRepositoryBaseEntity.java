@@ -4,11 +4,10 @@ import com.edu.ulab.app.entity.BaseEntity;
 import com.edu.ulab.app.storage.dao.DaoEntity;
 import com.edu.ulab.app.storage.repository.CrudRepository;
 
-import java.util.List;
+import java.io.Serializable;
 import java.util.Optional;
-import java.util.function.Predicate;
 
-public class CrudRepositoryBaseEntity<T extends BaseEntity<ID>, ID> implements CrudRepository<T, ID> {
+public class CrudRepositoryBaseEntity<T extends BaseEntity<ID>, ID extends Serializable> implements CrudRepository<T, ID> {
     private final DaoEntity<T, ID> daoEntity;
 
     public CrudRepositoryBaseEntity(final DaoEntity<T, ID> daoEntity) {
@@ -27,16 +26,11 @@ public class CrudRepositoryBaseEntity<T extends BaseEntity<ID>, ID> implements C
 
     @Override
     public void remove(T entity) {
-        daoEntity.delete(entity.getId());
+        daoEntity.delete(entity);
     }
 
     @Override
     public <S extends T> S update(S entity) {
         return daoEntity.update(entity);
-    }
-
-    @Override
-    public List<T> getByCriteria(Predicate<T> predicate) {
-        return daoEntity.getByCriteria(predicate);
     }
 }

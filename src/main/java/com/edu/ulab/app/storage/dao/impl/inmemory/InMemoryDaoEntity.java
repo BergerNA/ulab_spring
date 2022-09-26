@@ -4,13 +4,12 @@ import com.edu.ulab.app.entity.BaseEntity;
 import com.edu.ulab.app.storage.dao.DaoEntity;
 import com.edu.ulab.app.utils.CommonUtils;
 
+import java.io.Serializable;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
-import java.util.function.Predicate;
 
-public abstract class InMemoryDaoEntity<T extends BaseEntity<ID>, ID> implements DaoEntity<T, ID> {
+public abstract class InMemoryDaoEntity<T extends BaseEntity<ID>, ID extends Serializable> implements DaoEntity<T, ID> {
 
     HashMap<ID, T> entities = new HashMap<>();
 
@@ -28,15 +27,10 @@ public abstract class InMemoryDaoEntity<T extends BaseEntity<ID>, ID> implements
     }
 
     @Override
-    public void delete(ID id) {
-        CommonUtils.requireNonNull(id, "Deleted id is null.");
-        entities.remove(id);
-    }
-
-    @Override
-    public List<T> getByCriteria(Predicate<T> predicate) {
-        CommonUtils.requireNonNull(predicate, "Searching criteria is null");
-        return entities.values().stream().filter(predicate).toList();
+    public void delete(T entity) {
+        CommonUtils.requireNonNull(entity, "Deleted entity is null.");
+        CommonUtils.requireNonNull(entity.getId(), "Deleted id is null.");
+        entities.remove(entity.getId());
     }
 
     <T> void setIfPresent(T obj, Consumer<T> consumer) {
