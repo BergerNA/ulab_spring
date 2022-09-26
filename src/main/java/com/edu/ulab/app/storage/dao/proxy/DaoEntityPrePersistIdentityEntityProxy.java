@@ -4,12 +4,11 @@ import com.edu.ulab.app.entity.BaseEntity;
 import com.edu.ulab.app.storage.dao.DaoEntity;
 import com.edu.ulab.app.utils.CommonUtils;
 
-import java.util.List;
+import java.io.Serializable;
 import java.util.Optional;
 import java.util.function.Consumer;
-import java.util.function.Predicate;
 
-public class DaoEntityPrePersistIdentityEntityProxy<T extends BaseEntity<ID>, ID> implements DaoEntity<T, ID> {
+public class DaoEntityPrePersistIdentityEntityProxy<T extends BaseEntity<ID>, ID extends Serializable> implements DaoEntity<T, ID> {
 
     private final DaoEntity<T, ID> entityDao;
 
@@ -39,12 +38,7 @@ public class DaoEntityPrePersistIdentityEntityProxy<T extends BaseEntity<ID>, ID
     }
 
     @Override
-    public void delete(ID id) {
-        entityDao.delete(id);
-    }
-
-    @Override
-    public List<T> getByCriteria(Predicate<T> predicate) {
-        return entityDao.getByCriteria(predicate);
+    public void delete(T entity) {
+        entityDao.delete(entity);
     }
 }

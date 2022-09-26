@@ -7,23 +7,21 @@ import com.edu.ulab.app.mapper.UserMapper;
 import com.edu.ulab.app.service.UserService;
 import com.edu.ulab.app.storage.repository.CrudRepository;
 import com.edu.ulab.app.utils.CommonUtils;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.Optional;
 
 @Slf4j
 @Service
+@AllArgsConstructor
 public class UserServiceImpl implements UserService {
 
     private final CrudRepository<User, Long> userRepository;
 
     private final UserMapper userMapper;
-
-    public UserServiceImpl(final CrudRepository<User, Long> userRepository, final UserMapper userMapper) {
-        this.userRepository = userRepository;
-        this.userMapper = userMapper;
-    }
 
     @Override
     public UserDto createUser(final UserDto userDto) {
@@ -36,6 +34,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto updateUser(final UserDto userDto) {
         CommonUtils.requireNonNull(userDto, "Request to update user doesn't contain the user meteData");
+        userDto.setBooks(Collections.EMPTY_LIST);
         User updatedUser = userRepository.update(userMapper.userDtoToUser(userDto));
         log.info("Updated user: {}", updatedUser);
         return userMapper.userToUserDto(updatedUser);
