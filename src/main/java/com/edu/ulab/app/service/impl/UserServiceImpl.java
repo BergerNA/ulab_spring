@@ -22,7 +22,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserMapper userMapper;
 
-    public UserServiceImpl(@Qualifier("userSequenceIdentityInMemoryRepository") IRepository<User, Long> userRepository,
+    public UserServiceImpl(@Qualifier("userSpringDataRepository") IRepository<User, Long> userRepository,
                            UserMapper userMapper) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;

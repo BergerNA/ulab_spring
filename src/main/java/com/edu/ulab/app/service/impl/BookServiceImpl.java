@@ -20,7 +20,7 @@ public class BookServiceImpl implements BookService {
     private final IRepository<Book, Long> bookRepository;
     private final BookMapper bookMapper;
 
-    public BookServiceImpl(@Qualifier("bookSequenceIdentityInMemoryRepository") IRepository<Book, Long> bookRepository,
+    public BookServiceImpl(@Qualifier("bookSpringDataRepository") IRepository<Book, Long> bookRepository,
                            BookMapper bookMapper) {
         this.bookRepository = bookRepository;
         this.bookMapper = bookMapper;
