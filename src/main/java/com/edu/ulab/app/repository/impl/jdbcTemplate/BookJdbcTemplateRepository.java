@@ -1,8 +1,8 @@
-package com.edu.ulab.app.storage.dao.impl.jdbcTemplate;
+package com.edu.ulab.app.repository.impl.jdbcTemplate;
 
 import com.edu.ulab.app.entity.Book;
 import com.edu.ulab.app.exception.NotFoundException;
-import com.edu.ulab.app.storage.dao.DaoEntity;
+import com.edu.ulab.app.repository.IRepository;
 import com.edu.ulab.app.utils.CommonUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +18,7 @@ import java.util.Optional;
 @Slf4j
 @AllArgsConstructor
 @Repository
-public class JdbcTemplateBookDao implements DaoEntity<Book, Long> {
+public class BookJdbcTemplateRepository implements IRepository<Book, Long> {
 
     private final JdbcTemplate jdbcTemplate;
     private static final BeanPropertyRowMapper<Book> bookRowMapper = new BeanPropertyRowMapper<>(Book.class);
@@ -27,7 +27,6 @@ public class JdbcTemplateBookDao implements DaoEntity<Book, Long> {
     public Optional<Book> findById(Long id) {
         CommonUtils.requireNonNull(id, "Searching user id is null.");
         final String BOOK_SELECT_SQL = "SELECT TITLE, AUTHOR, PAGE_COUNT, USER_ID, ID FROM BOOK WHERE ID=?";
-        Objects.requireNonNull(id);
 
         Book book = jdbcTemplate.query(BOOK_SELECT_SQL, bookRowMapper, id)
                 .stream()
@@ -70,7 +69,7 @@ public class JdbcTemplateBookDao implements DaoEntity<Book, Long> {
                 book.getTitle(),
                 book.getAuthor(),
                 book.getPageCount(),
-                Objects.requireNonNull(book.getId()));
+                book.getId());
 
         if (updateCount > 0) {
             log.info("Updated book with id {}", book.getId());

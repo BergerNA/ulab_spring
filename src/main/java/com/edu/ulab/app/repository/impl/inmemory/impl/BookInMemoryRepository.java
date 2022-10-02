@@ -1,10 +1,13 @@
-package com.edu.ulab.app.storage.dao.impl.inmemory;
+package com.edu.ulab.app.repository.impl.inmemory.impl;
 
 import com.edu.ulab.app.entity.Book;
 import com.edu.ulab.app.exception.NotFoundException;
+import com.edu.ulab.app.repository.impl.inmemory.InMemoryRepository;
 import com.edu.ulab.app.utils.CommonUtils;
+import org.springframework.stereotype.Component;
 
-public class InMemoryBookDao extends InMemoryDaoEntity<Book, Long> {
+@Component
+public class BookInMemoryRepository extends InMemoryRepository<Book, Long> {
 
     @Override
     public <S extends Book> S update(S entity) {

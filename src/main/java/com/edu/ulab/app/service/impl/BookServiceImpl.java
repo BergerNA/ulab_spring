@@ -5,21 +5,26 @@ import com.edu.ulab.app.entity.Book;
 import com.edu.ulab.app.exception.NotFoundException;
 import com.edu.ulab.app.mapper.BookMapper;
 import com.edu.ulab.app.service.BookService;
-import com.edu.ulab.app.storage.repository.CrudRepository;
+import com.edu.ulab.app.repository.IRepository;
 import com.edu.ulab.app.utils.CommonUtils;
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @Slf4j
 @Service
-@AllArgsConstructor
 public class BookServiceImpl implements BookService {
 
-    private final CrudRepository<Book, Long> bookRepository;
+    private final IRepository<Book, Long> bookRepository;
     private final BookMapper bookMapper;
+
+    public BookServiceImpl(@Qualifier("bookSequenceIdentityInMemoryRepository") IRepository<Book, Long> bookRepository,
+                           BookMapper bookMapper) {
+        this.bookRepository = bookRepository;
+        this.bookMapper = bookMapper;
+    }
 
     @Override
     public BookDto createBook(BookDto bookDto) {
@@ -52,7 +57,7 @@ public class BookServiceImpl implements BookService {
         log.info("Delete book by book id{}.", bookId);
         Optional<Book> deletedBook = bookRepository.findById(bookId);
         deletedBook.ifPresent(book -> log.info("User to delete by id {}: {}", bookId, book));
-        bookRepository.remove(deletedBook.orElseThrow(
+        bookRepository.delete(deletedBook.orElseThrow(
                 () -> new NotFoundException(String.format("Book with id %d for delete wasn't found.", bookId))));
     }
 }
