@@ -11,19 +11,27 @@ import javax.persistence.*;
 @ToString
 @Builder
 @Entity(name = "book")
-public class Book extends BaseEntity<Long>{
+public class Book extends BaseEntity<Long> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "USER_ID", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY,
+            optional = false)
+    @JoinColumn(name = "person_id",
+            nullable = false)
     @ToString.Exclude
     private User user;
 
+    @Column(name = "title",
+            nullable = false)
     private String title;
 
+    @Column(name = "author",
+            nullable = false)
     private String author;
 
+    @Column(name = "page_count",
+            nullable = false)
     private int pageCount;
 }

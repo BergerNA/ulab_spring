@@ -18,13 +18,22 @@ public class User extends BaseEntity<Long> {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "age",
+            nullable = false)
     private int age;
 
+    @Column(name = "title",
+            nullable = false)
     private String title;
 
+    @Column(name = "full_name",
+            nullable = false)
     private String fullName;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @OneToMany(mappedBy = "user",
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.REMOVE,
+            orphanRemoval = true)
     @ToString.Exclude
     private List<Book> books = new ArrayList<>();
 }

@@ -1,18 +1,21 @@
-package com.edu.ulab.app.storage.dao.impl.inmemory;
+package com.edu.ulab.app.repository.impl.inmemory.impl;
 
 import com.edu.ulab.app.entity.Book;
 import com.edu.ulab.app.entity.User;
 import com.edu.ulab.app.exception.NotFoundException;
+import com.edu.ulab.app.repository.impl.inmemory.InMemoryRepository;
 import com.edu.ulab.app.utils.CommonUtils;
+import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
-public class InMemoryUserDao extends InMemoryDaoEntity<User, Long> {
+@Component
+public class UserInMemoryRepository extends InMemoryRepository<User, Long> {
 
-    private final InMemoryDaoEntity<Book, Long> bookDao;
+    private final InMemoryRepository<Book, Long> bookRepository;
 
-    public InMemoryUserDao(InMemoryDaoEntity<Book, Long> bookDao) {
-        this.bookDao = bookDao;
+    public UserInMemoryRepository(InMemoryRepository<Book, Long> bookRepository) {
+        this.bookRepository = bookRepository;
     }
 
     @Override
@@ -20,7 +23,7 @@ public class InMemoryUserDao extends InMemoryDaoEntity<User, Long> {
         CommonUtils.requireNonNull(id, "Searching user id is null.");
         Optional<User> foundUser = Optional.ofNullable(entities.get(id));
         foundUser.ifPresent(user -> user.setBooks(
-                bookDao.entities.values()
+                bookRepository.getAll()
                         .stream()
                         .filter(book -> book.getUser().getId().equals(id))
                         .toList()));
@@ -50,7 +53,7 @@ public class InMemoryUserDao extends InMemoryDaoEntity<User, Long> {
         CommonUtils.requireNonNull(userToDelete.getId(), "Deleted user id is null");
 
         Optional<User> deletedUser = Optional.ofNullable(entities.get(userToDelete.getId()));
-        deletedUser.ifPresent(user -> user.getBooks().forEach(bookDao::delete));
+        deletedUser.ifPresent(user -> user.getBooks().forEach(bookRepository::delete));
         super.delete(userToDelete);
     }
 }

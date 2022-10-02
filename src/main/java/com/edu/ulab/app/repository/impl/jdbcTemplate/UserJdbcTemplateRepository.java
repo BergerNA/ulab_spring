@@ -1,9 +1,9 @@
-package com.edu.ulab.app.storage.dao.impl.jdbcTemplate;
+package com.edu.ulab.app.repository.impl.jdbcTemplate;
 
 import com.edu.ulab.app.entity.Book;
 import com.edu.ulab.app.entity.User;
 import com.edu.ulab.app.exception.NotFoundException;
-import com.edu.ulab.app.storage.dao.DaoEntity;
+import com.edu.ulab.app.repository.IRepository;
 import com.edu.ulab.app.utils.CommonUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,10 +20,10 @@ import java.util.Optional;
 @Slf4j
 @AllArgsConstructor
 @Repository
-public class JdbcTemplateUserDao implements DaoEntity<User, Long> {
+public class UserJdbcTemplateRepository implements IRepository<User, Long> {
 
     private final JdbcTemplate jdbcTemplate;
-    private final JdbcTemplateBookDao jdbcTemplateDaoBook;
+    private final BookJdbcTemplateRepository jdbcTemplateDaoBook;
     private static final BeanPropertyRowMapper<User> userRowMapper = new BeanPropertyRowMapper<>(User.class);
     private static final BeanPropertyRowMapper<Book> bookRowMapper = new BeanPropertyRowMapper<>(Book.class);
 
@@ -85,13 +85,13 @@ public class JdbcTemplateUserDao implements DaoEntity<User, Long> {
 
     @Override
     public void delete(User user) {
+        CommonUtils.requireNonNull(user, "Deleted user is null");
+        CommonUtils.requireNonNull(user.getId(), "Deleted user id is null");
         final String USER_DELETE_SQL = "DELETE FROM PERSON WHERE ID=?";
-        Objects.requireNonNull(user);
 
         final List<Book> userBook = userBooks(user.getId());
 
         userBook.forEach(jdbcTemplateDaoBook::delete);
-
 
         int updateCount = jdbcTemplate.update(USER_DELETE_SQL, user.getId());
         if (updateCount > 0) {

@@ -1,8 +1,8 @@
-package com.edu.ulab.app.storage.dao.impl.springData;
+package com.edu.ulab.app.repository.impl.springData;
 
 import com.edu.ulab.app.entity.BaseEntity;
 import com.edu.ulab.app.exception.NotFoundException;
-import com.edu.ulab.app.storage.dao.DaoEntity;
+import com.edu.ulab.app.repository.IRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.data.repository.CrudRepository;
 
@@ -10,7 +10,7 @@ import java.io.Serializable;
 import java.util.Optional;
 
 @AllArgsConstructor
-public class SpringDataDaoEntity<T extends BaseEntity<ID>, ID extends Serializable> implements DaoEntity<T, ID> {
+public abstract class SpringDataRepository<T extends BaseEntity<ID>, ID extends Serializable> implements IRepository<T, ID> {
 
     private CrudRepository<T, ID> repository;
 

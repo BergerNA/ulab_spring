@@ -1,17 +1,19 @@
-package com.edu.ulab.app.storage.dao.impl.inmemory;
+package com.edu.ulab.app.repository.impl.inmemory;
 
 import com.edu.ulab.app.entity.BaseEntity;
-import com.edu.ulab.app.storage.dao.DaoEntity;
+import com.edu.ulab.app.repository.IRepository;
 import com.edu.ulab.app.utils.CommonUtils;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-public abstract class InMemoryDaoEntity<T extends BaseEntity<ID>, ID extends Serializable> implements DaoEntity<T, ID> {
+public abstract class InMemoryRepository<T extends BaseEntity<ID>, ID extends Serializable> implements IRepository<T, ID> {
 
-    HashMap<ID, T> entities = new HashMap<>();
+    protected HashMap<ID, T> entities = new HashMap<>();
 
     @Override
     public Optional<T> findById(ID id) {
@@ -33,7 +35,11 @@ public abstract class InMemoryDaoEntity<T extends BaseEntity<ID>, ID extends Ser
         entities.remove(entity.getId());
     }
 
-    <T> void setIfPresent(T obj, Consumer<T> consumer) {
+    public Collection<T> getAll() {
+        return entities.values();
+    }
+
+    protected <T> void setIfPresent(T obj, Consumer<T> consumer) {
         if (obj != null) {
             consumer.accept(obj);
         }

@@ -5,10 +5,10 @@ import com.edu.ulab.app.entity.User;
 import com.edu.ulab.app.exception.NotFoundException;
 import com.edu.ulab.app.mapper.UserMapper;
 import com.edu.ulab.app.service.UserService;
-import com.edu.ulab.app.storage.repository.CrudRepository;
+import com.edu.ulab.app.repository.IRepository;
 import com.edu.ulab.app.utils.CommonUtils;
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -16,12 +16,17 @@ import java.util.Optional;
 
 @Slf4j
 @Service
-@AllArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    private final CrudRepository<User, Long> userRepository;
+    private final IRepository<User, Long> userRepository;
 
     private final UserMapper userMapper;
+
+    public UserServiceImpl(@Qualifier("userSequenceIdentityInMemoryRepository") IRepository<User, Long> userRepository,
+                           UserMapper userMapper) {
+        this.userRepository = userRepository;
+        this.userMapper = userMapper;
+    }
 
     @Override
     public UserDto createUser(final UserDto userDto) {
@@ -54,7 +59,7 @@ public class UserServiceImpl implements UserService {
         CommonUtils.requireNonNull(userId, "Request to delete user doesn't contain the user id");
         Optional<User> deletedUser = userRepository.findById(userId);
         deletedUser.ifPresent(user -> log.info("User to delete by id {}: {}", userId, user));
-        userRepository.remove(deletedUser.orElseThrow(
+        userRepository.delete(deletedUser.orElseThrow(
                 () -> new NotFoundException(String.format("User with id %d for delete wasn't found.", userId))));
     }
 }
