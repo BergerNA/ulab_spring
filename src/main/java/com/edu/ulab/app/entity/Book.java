@@ -10,10 +10,12 @@ import javax.persistence.*;
 @Setter
 @ToString
 @Builder
-@Entity(name = "book")
+@Entity
+@Table(name = "book", schema = "ulab_edu")
 public class Book extends BaseEntity<Long> {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequence")
+    @SequenceGenerator(name = "sequence", sequenceName = "sequence", allocationSize = 100)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY,
