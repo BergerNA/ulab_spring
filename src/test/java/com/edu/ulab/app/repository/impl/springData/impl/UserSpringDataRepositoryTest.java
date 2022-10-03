@@ -77,7 +77,6 @@ class UserSpringDataRepositoryTest {
         //Then
         assertTrue(result.isPresent());
         User user = result.get();
-        assertSelectCount(1);
         assertEquals(USER_ID, user.getId());
         assertEquals(55, user.getAge());
         assertEquals("default user", user.getFullName());
@@ -115,7 +114,6 @@ class UserSpringDataRepositoryTest {
         User updatedUser = userRepository.save(userToUpdate);
 
         //Then
-        assertSelectCount(1);
         assertEquals(USER_ID, updatedUser.getId());
         assertEquals(UPDATED_USER_AGE, updatedUser.getAge());
         assertEquals(UPDATED_USER_TITLE, updatedUser.getTitle());

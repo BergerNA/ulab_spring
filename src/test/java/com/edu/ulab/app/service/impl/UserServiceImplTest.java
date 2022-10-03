@@ -82,7 +82,7 @@ class UserServiceImplTest {
     }
 
     @Test
-    @DisplayName("Получение пользователя по несуществующему id. Должно выбросить ошибку отсутствия пользователя.")
+    @DisplayName("Получение пользователя по несуществующему id. Должно вернуть ошибку отсутствия пользователя.")
     void getUserById_nonExistingUser_throwNotFoundException() {
         final long NON_EXIST_USER_ID = 1L;
 
@@ -137,7 +137,7 @@ class UserServiceImplTest {
     }
 
     @Test
-    @DisplayName("Удалить пользователя по несуществующему id. Должно выбросить ошибку отсутствия пользователя.")
+    @DisplayName("Удалить пользователя по несуществующему id. Должно вернуть ошибку отсутствия пользователя.")
     void deleteUserById_nonExistingUser_throwNotFoundException() {
         final long NON_EXIST_USER_ID = 1L;
 

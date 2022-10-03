@@ -37,7 +37,7 @@ class BookSpringDataRepositoryTest {
         SQLStatementCountValidator.reset();
     }
 
-    @DisplayName("Сохранить книгу и автора.")
+    @DisplayName("Сохранить книгу и автора. Должно пройти успешно.")
     @Test
     @Rollback
     @Sql({"classpath:sql/1_clear_schema.sql",
@@ -71,7 +71,7 @@ class BookSpringDataRepositoryTest {
         assertDeleteCount(0);
     }
 
-    @DisplayName("Получить книгу.")
+    @DisplayName("Получить книгу. Должно пройти успешно.")
     @Test
     @Rollback
     @Sql({"classpath:sql/1_clear_schema.sql",
@@ -96,7 +96,7 @@ class BookSpringDataRepositoryTest {
         assertDeleteCount(0);
     }
 
-    @DisplayName("Обновить книгу.")
+    @DisplayName("Обновить книгу. Должно пройти успешно.")
     @Test
     @Rollback
     @Sql({"classpath:sql/1_clear_schema.sql",
@@ -140,7 +140,7 @@ class BookSpringDataRepositoryTest {
         assertDeleteCount(0);
     }
 
-    @DisplayName("Удаление книги по id.")
+    @DisplayName("Удаление книги по id. Должно пройти успешно.")
     @Test
     @Rollback
     @Sql({"classpath:sql/1_clear_schema.sql",
