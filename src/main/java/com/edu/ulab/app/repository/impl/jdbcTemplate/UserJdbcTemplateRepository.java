@@ -14,7 +14,6 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 @Slf4j
@@ -22,6 +21,7 @@ import java.util.Optional;
 @Repository
 public class UserJdbcTemplateRepository implements IRepository<User, Long> {
 
+    private final DbLongSequenceEntityIdInstaller entityIdInstaller;
     private final JdbcTemplate jdbcTemplate;
     private final BookJdbcTemplateRepository jdbcTemplateDaoBook;
     private static final BeanPropertyRowMapper<User> userRowMapper = new BeanPropertyRowMapper<>(User.class);
@@ -30,7 +30,7 @@ public class UserJdbcTemplateRepository implements IRepository<User, Long> {
     @Override
     public Optional<User> findById(Long id) {
         CommonUtils.requireNonNull(id, "Searching user id is null.");
-        final String USER_SELECT_SQL = "SELECT ID, FULL_NAME, TITLE, AGE FROM PERSON WHERE ID=?";
+        final String USER_SELECT_SQL = "SELECT ID, FULL_NAME, TITLE, AGE FROM ULAB_EDU.PERSON WHERE ID=?";
 
         Optional<User> foundUser = Optional.of(jdbcTemplate.query(USER_SELECT_SQL, userRowMapper, id)
                 .stream()
@@ -48,26 +48,27 @@ public class UserJdbcTemplateRepository implements IRepository<User, Long> {
 
     @Override
     public <S extends User> S save(S user) {
-        final String USER_INSERT_SQL = "INSERT INTO PERSON(FULL_NAME, TITLE, AGE) VALUES (?,?,?)";
+        entityIdInstaller.onBeforeConvert(user);
+        final String USER_INSERT_SQL = "INSERT INTO ULAB_EDU.PERSON(ID, FULL_NAME, TITLE, AGE) VALUES (?,?,?,?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
+
         jdbcTemplate.update(
                 connection -> {
                     var ps = connection.prepareStatement(USER_INSERT_SQL, new String[]{"id"});
-                    ps.setString(1, user.getFullName());
-                    ps.setString(2, user.getTitle());
-                    ps.setLong(3, user.getAge());
+                    ps.setLong(1, user.getId());
+                    ps.setString(2, user.getFullName());
+                    ps.setString(3, user.getTitle());
+                    ps.setLong(4, user.getAge());
                     return ps;
-                },
-                keyHolder);
+                });
 
-        user.setId(Objects.requireNonNull(keyHolder.getKey()).longValue());
         log.info("Created user with id {}.", user.getId());
         return user;
     }
 
     @Override
     public <S extends User> S update(S user) {
-        final String USER_UPDATE_SQL = "UPDATE PERSON SET FULL_NAME=?, TITLE=?, AGE=? WHERE ID=?";
+        final String USER_UPDATE_SQL = "UPDATE ULAB_EDU.PERSON SET FULL_NAME=?, TITLE=?, AGE=? WHERE ID=?";
 
         int updateCount = jdbcTemplate.update(USER_UPDATE_SQL,
                 user.getFullName(),
@@ -87,7 +88,7 @@ public class UserJdbcTemplateRepository implements IRepository<User, Long> {
     public void delete(User user) {
         CommonUtils.requireNonNull(user, "Deleted user is null");
         CommonUtils.requireNonNull(user.getId(), "Deleted user id is null");
-        final String USER_DELETE_SQL = "DELETE FROM PERSON WHERE ID=?";
+        final String USER_DELETE_SQL = "DELETE FROM ULAB_EDU.PERSON WHERE ID=?";
 
         final List<Book> userBook = userBooks(user.getId());
 
@@ -102,7 +103,7 @@ public class UserJdbcTemplateRepository implements IRepository<User, Long> {
     }
 
     private List<Book> userBooks(Long userId) {
-        final String SELECT_BOOK_BY_USER_ID = "SELECT ID, TITLE, AUTHOR, PAGE_COUNT FROM BOOK WHERE USER_ID=?";
+        final String SELECT_BOOK_BY_USER_ID = "SELECT ID, TITLE, AUTHOR, PAGE_COUNT FROM ULAB_EDU.BOOK WHERE PERSON_ID=?";
         return jdbcTemplate.query(SELECT_BOOK_BY_USER_ID, bookRowMapper, userId);
     }
 }
