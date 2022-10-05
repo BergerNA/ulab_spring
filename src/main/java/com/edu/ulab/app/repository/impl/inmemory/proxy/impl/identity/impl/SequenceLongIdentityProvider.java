@@ -11,7 +11,7 @@ import java.util.concurrent.atomic.AtomicLong;
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
 public class SequenceLongIdentityProvider implements IdentityProvider<Long> {
 
-    private final AtomicLong sequenceGenerator = new AtomicLong(0);
+    private final AtomicLong sequenceGenerator = new AtomicLong(1);
 
     @Override
     public Long nextIdentity() {
